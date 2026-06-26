@@ -1,0 +1,16 @@
+---
+import LiraMark from './LiraMark.astro';
+
+type Props = {
+  accent?: string;
+};
+
+const { accent = '#00eaff' } = Astro.props;
+---
+
+<div class="lira-panel module-shot" style={`--lira-accent: ${accent}`}>
+  <div class="lira-panel__glow" aria-hidden="true"></div>
+  <LiraMark size={128} />
+  <p class="lira-panel__name">LIRA</p>
+  <p class="lira-panel__tag">Lectura Inteligente de Registros y Alertas</p>
+</div>

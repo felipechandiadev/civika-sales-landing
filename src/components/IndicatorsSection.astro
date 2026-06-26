@@ -1,0 +1,34 @@
+---
+import { INDICATORS } from '../content/site';
+import Reveal from './Reveal.astro';
+---
+
+<section class="section" id="indicadores">
+  <div class="wrap">
+    <Reveal>
+      <div class="section-header">
+        <span class="eyebrow">Indicadores</span>
+        <h2>Lo que la autoridad necesita medir — no solo ejecutar</h2>
+        <p class="lead">
+          CIVIKA cierra el ciclo entre percepción ciudadana, operación y presupuesto. Estos son los
+          indicadores que atraviesan Pulse, Focus, Visión e Intelligence.
+        </p>
+      </div>
+    </Reveal>
+
+    <div class="indicators-grid">
+      {INDICATORS.map((indicator) => (
+        <Reveal>
+          <article class="indicator-card surface">
+            <div class="indicator-top">
+              <h3>{indicator.name}</h3>
+              <span class="indicator-short">{indicator.short}</span>
+            </div>
+            {indicator.range && <p class="indicator-range">Escala {indicator.range}</p>}
+            <p>{indicator.description}</p>
+          </article>
+        </Reveal>
+      ))}
+    </div>
+  </div>
+</section>

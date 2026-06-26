@@ -1,0 +1,56 @@
+---
+import { MODULES } from '../content/site';
+import AppPreview from './AppPreview.astro';
+import LiraMark from './LiraMark.astro';
+import Reveal from './Reveal.astro';
+---
+
+<section class="section" id="modulos">
+  <div class="wrap">
+    <Reveal>
+      <div class="section-header">
+        <span class="eyebrow">Módulos</span>
+        <h2>Cada app con un rol claro en la comuna</h2>
+        <p class="lead">
+          Ocho aplicaciones especializadas sobre un Core común. Aquí el detalle de qué hace cada una, para
+          quién es y qué capacidades destacan en operación real.
+        </p>
+      </div>
+    </Reveal>
+
+    <div class="modules-grid">
+      {MODULES.map((mod) => (
+        <Reveal>
+          <article class="module-card" id={mod.id}>
+            <AppPreview
+              src={mod.screenshot}
+              alt={mod.name}
+              app={mod.id}
+              accent={mod.accent}
+              screenshots={mod.screenshots}
+              variant="module"
+            />
+            <div>
+              <div class="module-meta">
+                <span class="module-tag">{mod.tagline}</span>
+              </div>
+              <h3 class="module-title">
+                {mod.id === 'lira' && <LiraMark size={28} />}
+                {mod.name}
+              </h3>
+              <p>{mod.description}</p>
+              <p style="margin-top: 10px; font-size: 0.88rem;">
+                <strong style="color: var(--text);">Usuarios:</strong> {mod.users}
+              </p>
+              <div class="module-highlights">
+                {mod.highlights.map((item) => (
+                  <span class="chip">{item}</span>
+                ))}
+              </div>
+            </div>
+          </article>
+        </Reveal>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,26 @@
+---
+import LiraPanel from './LiraPanel.astro';
+import PulseScreenshotDuo from './PulseScreenshotDuo.astro';
+import ScreenshotFrame from './ScreenshotFrame.astro';
+
+type Props = {
+  app: string;
+  src: string;
+  alt: string;
+  accent?: string;
+  screenshots?: string[];
+  variant?: 'module' | 'pillar';
+};
+
+const { app, src, alt, accent, screenshots, variant = 'module' } = Astro.props;
+---
+
+{
+  app === 'lira' ? (
+    <LiraPanel accent={accent} />
+  ) : app === 'pulse' && screenshots?.length === 2 ? (
+    <PulseScreenshotDuo accent={accent} variant={variant} />
+  ) : (
+    <ScreenshotFrame src={src} alt={alt} app={app} accent={accent} />
+  )
+}

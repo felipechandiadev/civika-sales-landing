@@ -1,0 +1,221 @@
+---
+import { ECOSYSTEM } from '../content/site';
+import Reveal from './Reveal.astro';
+
+/** Ciclo: anillo + 4 fases + Core. Sin cajas ni conectores de apps. */
+const W = 920;
+const H = 620;
+const cx = 460;
+const cy = 310;
+const R = 200;
+
+const rad = (deg: number) => (deg * Math.PI) / 180;
+const pt = (deg: number, r = R) => ({
+  x: cx + r * Math.cos(rad(deg)),
+  y: cy + r * Math.sin(rad(deg)),
+});
+
+const north = pt(-90);
+const east = pt(0);
+const south = pt(90);
+const west = pt(180);
+
+const PW = 200;
+const PH = 72;
+const gap = 28;
+
+const phases = [
+  {
+    x: cx - PW / 2,
+    y: north.y - gap - PH,
+    w: PW,
+    h: PH,
+    label: 'Capturar',
+    sub: 'Percepción y señales ciudadanas',
+    apps: 'Pulse · Pulse Manager',
+    fill: 'rgba(113,116,255,0.22)',
+    stroke: 'rgba(113,116,255,0.6)',
+  },
+  {
+    x: east.x + gap,
+    y: cy - PH / 2,
+    w: PW,
+    h: PH,
+    label: 'Coordinar',
+    sub: 'Central y despacho',
+    apps: 'Nexo · S.O.S. · PTT',
+    fill: 'rgba(0,209,255,0.16)',
+    stroke: 'rgba(0,209,255,0.55)',
+  },
+  {
+    x: cx - PW / 2,
+    y: south.y + gap,
+    w: PW,
+    h: PH,
+    label: 'Actuar',
+    sub: 'Terreno y gestión operativa',
+    apps: 'Sentinel · Focus',
+    fill: 'rgba(76,212,168,0.16)',
+    stroke: 'rgba(76,212,168,0.55)',
+  },
+  {
+    x: west.x - gap - PW,
+    y: cy - PH / 2,
+    w: PW,
+    h: PH,
+    label: 'Medir',
+    sub: 'Indicadores e inteligencia',
+    apps: 'Visión · LIRA · Intelligence',
+    fill: 'rgba(194,107,255,0.16)',
+    stroke: 'rgba(194,107,255,0.55)',
+  },
+];
+
+const core = { x: cx - 100, y: cy - 48, w: 200, h: 96 };
+
+const phaseCoreLinks = [
+  { x1: cx, y1: phases[0].y + phases[0].h, x2: cx, y2: core.y },
+  { x1: phases[1].x, y1: cy, x2: core.x + core.w, y2: cy },
+  { x1: cx, y1: phases[2].y, x2: cx, y2: core.y + core.h },
+  { x1: phases[3].x + phases[3].w, y1: cy, x2: core.x, y2: cy },
+];
+
+function ringArc(startDeg: number, endDeg: number, sweep: 0 | 1) {
+  const start = pt(startDeg);
+  const end = pt(endDeg);
+  let delta = endDeg - startDeg;
+  if (sweep === 1 && delta < 0) delta += 360;
+  if (sweep === 0 && delta > 0) delta -= 360;
+  const large = Math.abs(delta) > 180 ? 1 : 0;
+  return `M ${start.x} ${start.y} A ${R} ${R} 0 ${large} ${sweep} ${end.x} ${end.y}`;
+}
+
+const cycleArcs = [ringArc(-84, -6, 1), ringArc(6, 84, 1), ringArc(96, 174, 1)];
+const returnArc = ringArc(186, 264, 0);
+---
+
+<section class="section" id="ecosistema">
+  <div class="wrap">
+    <Reveal>
+      <div class="section-header center">
+        <span class="eyebrow">{ECOSYSTEM.eyebrow}</span>
+        <h2>{ECOSYSTEM.title}</h2>
+        <div class="ecosystem-cycle" aria-label="Ciclo: capturar, coordinar, actuar, medir y volver a priorizar">
+          {ECOSYSTEM.cycle.map((step, index) => (
+            <>
+              <span class="ecosystem-cycle__step">{step}</span>
+              {index < ECOSYSTEM.cycle.length - 1 && (
+                <span class="ecosystem-cycle__arrow" aria-hidden="true">→</span>
+              )}
+            </>
+          ))}
+          <span class="ecosystem-cycle__return" aria-hidden="true">↻</span>
+        </div>
+        <p class="ecosystem-cycle__note">{ECOSYSTEM.cycleNote}</p>
+        <p class="lead">{ECOSYSTEM.intro}</p>
+      </div>
+    </Reveal>
+
+    <Reveal>
+      <div class="ecosystem-wrap">
+        <svg
+          class="ecosystem-svg"
+          viewBox={`0 0 ${W} ${H}`}
+          role="img"
+          aria-label="Diagrama cíclico del ecosistema CIVIKA"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <defs>
+            <linearGradient id="eco-flow" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#00eaff" />
+              <stop offset="100%" stop-color="#7174ff" />
+            </linearGradient>
+            <marker id="eco-arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+              <path d="M0,0 L9,4.5 L0,9 Z" fill="#00eaff" />
+            </marker>
+          </defs>
+
+          <!-- 1. Anillo perfecto — capa más baja -->
+          <circle
+            class="eco-ring"
+            cx={cx}
+            cy={cy}
+            r={R}
+            fill="none"
+            stroke="url(#eco-flow)"
+            stroke-width="9"
+            opacity="0.38"
+          />
+
+          <!-- 2. Sentido del ciclo -->
+          <g
+            fill="none"
+            stroke="url(#eco-flow)"
+            stroke-width="9"
+            stroke-linecap="round"
+            marker-end="url(#eco-arrow)"
+            opacity="0.88"
+          >
+            {cycleArcs.map((d) => (
+              <path d={d} />
+            ))}
+            <path d={returnArc} stroke="#c26bff" stroke-dasharray="16 12" opacity="0.95" />
+          </g>
+
+          <!-- 3. Fase → Core -->
+          <g stroke="url(#eco-flow)" stroke-width="6" fill="none" opacity="0.9" stroke-linecap="round">
+            {phaseCoreLinks.map((l) => (
+              <line x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} />
+            ))}
+          </g>
+
+          <!-- 4. Fases (apps como texto, sin cajas externas) -->
+          <g class="eco-phases">
+            {phases.map((p) => (
+              <>
+                <rect
+                  x={p.x}
+                  y={p.y}
+                  width={p.w}
+                  height={p.h}
+                  rx="14"
+                  fill={p.fill}
+                  stroke={p.stroke}
+                  stroke-width="1.5"
+                />
+                <text x={p.x + p.w / 2} y={p.y + 22} text-anchor="middle" fill="#f5f5f7" font-size="14" font-weight="700">
+                  {p.label}
+                </text>
+                <text x={p.x + p.w / 2} y={p.y + 40} text-anchor="middle" fill="#9ca3af" font-size="10">
+                  {p.sub}
+                </text>
+                <text x={p.x + p.w / 2} y={p.y + 58} text-anchor="middle" fill="#6b7280" font-size="9.5">
+                  {p.apps}
+                </text>
+              </>
+            ))}
+          </g>
+
+          <!-- 5. Core -->
+          <rect
+            x={core.x}
+            y={core.y}
+            width={core.w}
+            height={core.h}
+            rx="20"
+            fill="#0a0a12"
+            stroke="url(#eco-flow)"
+            stroke-width="2.5"
+          />
+          <rect x={core.x + 2} y={core.y + 2} width={core.w - 4} height={core.h - 4} rx="18" fill="rgba(0,234,255,0.1)" stroke="none" />
+          <text x={cx} y={core.y + 36} text-anchor="middle" fill="#fff" font-size="17" font-weight="700">
+            CIVIKA Core
+          </text>
+          <text x={cx} y={core.y + 58} text-anchor="middle" fill="#9ca3af" font-size="10.5">
+            API · PostGIS · Gemelo · Auth · Push
+          </text>
+        </svg>
+      </div>
+    </Reveal>
+  </div>
+</section>

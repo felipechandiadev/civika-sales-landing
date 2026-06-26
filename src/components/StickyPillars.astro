@@ -1,0 +1,73 @@
+---
+import { PILLARS, PILLARS_SECTION } from '../content/site';
+import AppPreview from './AppPreview.astro';
+import LiraMark from './LiraMark.astro';
+import Reveal from './Reveal.astro';
+---
+
+<section class="section section-tight" id="pilares">
+  <div class="wrap">
+    <Reveal>
+      <div class="section-header">
+        <span class="eyebrow">{PILLARS_SECTION.eyebrow}</span>
+        <h2>{PILLARS_SECTION.title}</h2>
+        <p class="lead">{PILLARS_SECTION.intro}</p>
+      </div>
+    </Reveal>
+
+    {PILLARS.map((pillar) => (
+      <article class="pillar">
+        <Reveal>
+          <div class="pillar-visual">
+            <div class="mockup-shell" style={`box-shadow: 0 40px 100px ${pillar.accent}22`}>
+              <div class="mockup-toolbar">
+                <div class="mockup-dots" aria-hidden="true">
+                  <span /><span /><span />
+                </div>
+                <span class="badge">
+                  {pillar.id === 'lira' ? (
+                    <LiraMark size={18} glow={false} />
+                  ) : (
+                    <span class="badge-dot" style={`background: ${pillar.accent}`}></span>
+                  )}
+                  {pillar.eyebrow}
+                </span>
+              </div>
+              <AppPreview
+                app={pillar.id}
+                src={pillar.screenshot}
+                alt={pillar.title}
+                accent={pillar.accent}
+                screenshots={pillar.screenshots}
+                variant="pillar"
+              />
+            </div>
+          </div>
+        </Reveal>
+
+        <div class="pillar-steps">
+          <Reveal>
+            <div class="pillar-step">
+              <span class="eyebrow lira-eyebrow">
+                {pillar.id === 'lira' && <LiraMark size={22} glow={false} />}
+                {pillar.eyebrow}
+              </span>
+              <h2>{pillar.title}</h2>
+              <p class="lead">{pillar.body}</p>
+            </div>
+          </Reveal>
+          <Reveal>
+            <div class="pillar-step">
+              <h3>Qué resuelve</h3>
+              <ul class="pillar-bullets">
+                {pillar.bullets.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </div>
+          </Reveal>
+        </div>
+      </article>
+    ))}
+  </div>
+</section>

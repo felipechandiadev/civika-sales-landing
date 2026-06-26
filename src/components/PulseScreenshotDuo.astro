@@ -1,0 +1,26 @@
+---
+import { PULSE_SCREENSHOTS } from '../content/site';
+
+type Props = {
+  accent?: string;
+  variant?: 'marquee' | 'module' | 'pillar';
+};
+
+const { accent = '#7174ff', variant = 'module' } = Astro.props;
+---
+
+{
+  variant === 'marquee' ? (
+    <div class="pulse-duo pulse-duo--marquee" style={`--shot-accent: ${accent}`}>
+      <img src={PULSE_SCREENSHOTS.feed} alt="Pulse — feed ciudadano" loading="lazy" />
+      <img src={PULSE_SCREENSHOTS.survey} alt="Pulse — encuesta de percepción" loading="lazy" />
+    </div>
+  ) : (
+    <div class="module-shot module-shot--pulse-duo" style={`--shot-accent: ${accent}`}>
+      <div class={`pulse-duo pulse-duo--${variant}`}>
+        <img src={PULSE_SCREENSHOTS.feed} alt="Pulse — feed ciudadano" loading="lazy" />
+        <img src={PULSE_SCREENSHOTS.survey} alt="Pulse — encuesta de percepción" loading="lazy" />
+      </div>
+    </div>
+  )
+}

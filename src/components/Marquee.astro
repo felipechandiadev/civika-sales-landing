@@ -1,0 +1,31 @@
+---
+import { MARQUEE_ITEMS } from '../content/site';
+import LiraMark from './LiraMark.astro';
+import PulseScreenshotDuo from './PulseScreenshotDuo.astro';
+
+const items = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS];
+---
+
+<section class="marquee-section" aria-label="Capturas del ecosistema">
+  <p class="marquee-label">Desplegado en el territorio</p>
+  <div class="marquee-track">
+    <div class="marquee-group">
+      {items.map((item) => (
+        <figure
+          class={`marquee-card${item.label === 'LIRA' ? ' marquee-card--lira' : ''}${item.pulseDuo ? ' marquee-card--pulse' : ''}`}
+        >
+          {item.pulseDuo ? (
+            <PulseScreenshotDuo variant="marquee" />
+          ) : item.label === 'LIRA' ? (
+            <div class="marquee-lira" aria-hidden="true">
+              <LiraMark size={80} />
+            </div>
+          ) : (
+            <img src={item.screenshot} alt={`Captura ${item.label}`} loading="lazy" />
+          )}
+          <figcaption>{item.label}</figcaption>
+        </figure>
+      ))}
+    </div>
+  </div>
+</section>
